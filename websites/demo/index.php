@@ -1,48 +1,14 @@
 <?php
 
-$books = [
-    [
-        "name" => "Do Androids Dream of Electric Sheep?",
-        "author" => "Philip K. Dick",
-        "releaseYear" => 1968,
-        "purchaseUrl" => "https://example.com/androids-dream"
-    ],
-    [
-        "name" => "Project Hail Mary",
-        "author" => "Andy Weir",
-        "releaseYear" => 2021,
-        "purchaseUrl" => "https://example.com/hail-mary"
-    ],
-    [
-        "name" => "Electric Sheep",
-        "author" => "Andy Weir",
-        "releaseYear" => 2022,
-        "purchaseUrl" => "https://example.com/electric-sheep"
-    ]
-];
+require 'function.php';
+//require 'router.php';
+require 'Database.php';
 
-/**
- * This method is alternative array_filter method.
- * @param $books
- * @param $callback
- * @return array
- */
-function filter($books, $callback): array
-{
-    $filteredItem = [];
+// Connect to the database, and execute a query.
 
-    foreach ($books as $book) {
-        if ($callback($book)) {
-            $filteredItem[] = $book;
-        }
-    }
+$config = require('config.php');
 
-    return $filteredItem;
-}
+$db = new Database($config['database']);
+$posts = $db->query("SELECT * FROM `posts` WHERE id = :id", [':id' => 1])->fetchAll();
 
-$filteredBooks = filter($books, function ($book) {
-    return $book['author'] == 'Andy Weir';
-});
-
-require "index.view.php";
-
+dd($posts);
