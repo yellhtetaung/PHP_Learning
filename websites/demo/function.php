@@ -10,7 +10,7 @@ function dd($value): void
 }
 
 
-function abort($code = 404): void
+function abort($code = Response::NOT_FOUND): void
 {
     http_response_code($code);
 
@@ -22,4 +22,11 @@ function abort($code = 404): void
 function urlIs($url): bool
 {
     return $_SERVER["REQUEST_URI"] == $url;
+}
+
+function authorize($condition, $status = Response::FORBIDDEN): void
+{
+    if (!$condition) {
+        abort($status);
+    }
 }
