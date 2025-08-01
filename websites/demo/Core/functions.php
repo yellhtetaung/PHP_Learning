@@ -1,5 +1,7 @@
 <?php
 
+use Core\Response;
+
 function dd($value): void
 {
     echo "<pre>";
@@ -10,11 +12,11 @@ function dd($value): void
 }
 
 
-function abort($code = Response::NOT_FOUND): void
+function abort($code = Response::NOT_FOUND): never
 {
     http_response_code($code);
 
-    require "views/{$code}.php";
+    view("{$code}.php");
 
     die();
 }
@@ -29,4 +31,16 @@ function authorize($condition, $status = Response::FORBIDDEN): void
     if (!$condition) {
         abort($status);
     }
+}
+
+function base_path(string $path): string
+{
+    return BASE_PATH . $path;
+}
+
+function view($path, $attributes = []): void
+{
+    extract($attributes);
+
+    require base_path("views/" . $path);
 }

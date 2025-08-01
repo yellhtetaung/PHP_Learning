@@ -1,9 +1,13 @@
 <?php
 
+namespace Core;
+
+use PDO;
+
 class Database
 {
     protected PDO $connection;
-    protected PDOStatement $statement;
+    protected $statement;
 
     public function __construct(array $config, string $username = 'root', string $password = 'Yehtetaung@2481998')
     {
@@ -14,7 +18,7 @@ class Database
         ]);
     }
 
-    public function query(string $query, array $params = []): Database
+    public function query(string $query, array $params = [])
     {
         $this->statement = $this->connection->prepare($query);
         $this->statement->execute($params);
@@ -22,17 +26,17 @@ class Database
         return $this;
     }
 
-    public function get(): array|bool
+    public function get()
     {
         return $this->statement->fetchAll();
     }
 
-    public function find(): array|bool
+    public function find()
     {
         return $this->statement->fetch();
     }
 
-    public function findOrFail(): array
+    public function findOrFail()
     {
         $result = $this->find();
 
