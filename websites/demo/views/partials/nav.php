@@ -34,26 +34,32 @@
                     </button>
 
                     <!-- Profile dropdown -->
-                    <el-dropdown class="relative ml-3">
-                        <button class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800">
-                            <span class="absolute -inset-1.5"></span>
-                            <span class="sr-only">Open user menu</span>
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1zwhySGCEBxRRFYIcQgvOLOpRGqrT3d7Qng&s"
-                                 alt="" class="size-8 rounded-full"/>
-                        </button>
+                    <div class="relative ml-3">
+                        <?php if ($_SESSION['user'] ?? false): ?>
+                            <button class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800">
+                                <span class="absolute -inset-1.5"></span>
+                                <span class="sr-only">Open user menu</span>
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1zwhySGCEBxRRFYIcQgvOLOpRGqrT3d7Qng&s"
+                                     alt="" class="size-8 rounded-full"/>
+                            </button>
+                        <?php else: ?>
+                            <a href="/login"
+                               class="<?= urlIs('/login') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' ?> rounded-md px-3 py-2 text-sm font-medium">Login</a>
+                            <a href="/register"
+                               class="<?= urlIs('/register') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' ?> rounded-md px-3 py-2 text-sm font-medium">Register</a>
+                        <?php endif; ?>
+                    </div>
 
-                        <el-menu anchor="bottom end" popover
-                                 class="w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
-                            <a href="#"
-                               class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Your
-                                Profile</a>
-                            <a href="#"
-                               class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Settings</a>
-                            <a href="#"
-                               class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Sign
-                                out</a>
-                        </el-menu>
-                    </el-dropdown>
+                    <?php if ($_SESSION['user'] ?? false): ?>
+                        <div class="ml-3">
+                            <form action="/session" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button class="bg-red-700 text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer hover:bg-red-900">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="-mr-2 flex md:hidden">
@@ -95,8 +101,12 @@
                          alt="" class="size-10 rounded-full"/>
                 </div>
                 <div class="ml-3">
-                    <div class="text-base/5 font-medium text-white">Tom Cook</div>
-                    <div class="text-sm font-medium text-gray-400">tom@example.com</div>
+                    <div class="text-base/5 font-medium text-white">
+                        <?= $_SESSION['user']['name'] ?? "Guest" ?>
+                    </div>
+                    <div class="text-sm font-medium text-gray-400">
+                        <?= $_SESSION['user']['email'] ?? "No data" ?>
+                    </div>
                 </div>
                 <button type="button"
                         class="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
@@ -109,16 +119,13 @@
                     </svg>
                 </button>
             </div>
-            <div class="mt-3 space-y-1 px-2">
-                <a href="#"
-                   class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Your
-                    Profile</a>
-                <a href="#"
-                   class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Settings</a>
-                <a href="#"
-                   class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Sign
-                    out</a>
+
+            <div class="space-y-1 px-2 pt-4 pb-3 sm:px-3">
+                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                <a href="/" aria-current="page"
+                   class="bg-red-700 text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer hover:bg-red-900 block text-center">Logout</a>
             </div>
+
         </div>
     </el-disclosure>
 </nav>
