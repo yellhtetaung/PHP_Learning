@@ -7,7 +7,7 @@ use Core\App;
 
 $db = App::resolve(Database::class);
 
-$currentUserId = 3;
+$currentUserId = getCurrentUserId();
 
 $note = $db->query('SELECT * FROM notes WHERE id = :id', [':id' => $_POST['id']])->findOrFail();
 
