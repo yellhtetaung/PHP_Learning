@@ -38,28 +38,30 @@ function base_path(string $path): string
     return BASE_PATH . $path;
 }
 
-function view($path, $attributes = []): void
+function view($path, $attributes = [])
 {
     extract($attributes);
 
-    require base_path("views/" . $path);
+    return require base_path("views/" . $path);
 }
 
-function login($user): void
+function redirect($path)
 {
-    $_SESSION['user'] = [
-        'name' => $user['name'],
-        'email' => $user['email'],
-    ];
-
-    session_regenerate_id(true);
+    header("Location: " . $path);
+    exit();
 }
 
-function logout(): void
+function old($key, $default = ''): mixed
 {
-    $_SESSION = [];
-    session_destroy();
+    return \Core\Session::getFlash('old')[$key] ?? $default;
+}
 
-    $params = session_get_cookie_params();
-    setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+function getCurrentUserId()
+{
+    return \Core\Session::get('user')['id'];
+}
+
+function getCurrentUserInfo($key, $default = '')
+{
+    return \Core\Session::get('user')[$key] ?? $default;
 }
